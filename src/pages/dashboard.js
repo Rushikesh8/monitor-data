@@ -11,12 +11,14 @@ import Paper from '@mui/material/Paper';
 
 const Dashboard = () => {
     const [paCodeMissingData,setPaCodeMissingData] = useState()
+    const [updatedAt,setUpdatedAt] = useState("")
     
     const getDataFromSheet = () => {
         axios.get("https://script.google.com/macros/s/AKfycbwMsg7RJ1wbdm0FM-Pg6TeyZSQUzb5enYGljLg7kOWUWSNZghFIznlqKIeNsc17B8P2/exec")
         .then((response) => {
             if(response.status == 200){
             setPaCodeMissingData(response.data)
+            setUpdatedAt(new Date().toLocaleString())
             }
         })
     }
@@ -75,7 +77,7 @@ const Dashboard = () => {
     return (
         <div className="mx-auto">
         	<div
-		class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-full sm:w-1/4 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-auto my-4'>
+		class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-full sm:w-1/4 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-5 md:mx-auto my-4'>
 		<div class="flex justify-between w-full">
 			<div>
 				<div class="p-2">
@@ -96,8 +98,10 @@ const Dashboard = () => {
 				Missing PA Code
 			</div>
 		</div>
+       
 	</div>
     <div className="mx-10 mt-20 table-override">
+    <p className="text-right text-sm mb-1">Data Updated at : {updatedAt}</p>
     <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
