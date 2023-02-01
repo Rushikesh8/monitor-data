@@ -95,7 +95,7 @@ const Dashboard = () => {
 				{paCodeMissingData ? paCodeMissingData.total_records_with_pa_missing : 0}
 			</div>
 			<div class="font-bold text-sm">
-				Missing PA Code
+				Missing Packing Code
 			</div>
 		</div>
        
