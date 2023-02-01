@@ -77,7 +77,7 @@ const Dashboard = () => {
     return (
         <div className="mx-auto">
         	<div
-		class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-full sm:w-1/4 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-5 md:mx-auto my-4'>
+		class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-10/12 md:w-4/12 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-auto my-4'>
 		<div class="flex justify-between w-full">
 			<div>
 				<div class="p-2">
