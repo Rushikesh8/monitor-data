@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "./graphic-arrow-svgrepo-com.svg"
+import Logo from "../images/graphic-arrow-svgrepo-com.svg"
 
 const Navbar = () => {
     return (
@@ -8,7 +8,7 @@ const Navbar = () => {
           <div class="flex h-16 items-center justify-between">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <img class="h-8 w-8" src={Logo} alt="Your Company"/>
+                <img class="h-8 w-8" src={Logo} alt="monitor"/>
                 
               </div>
               <h1 className="mx-2 font-bold text-lg text-white">Monitor</h1>

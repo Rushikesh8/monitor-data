@@ -28,56 +28,48 @@ const Dashboard = () => {
     const timerId = setInterval(() => {
         getDataFromSheet()
       }, 300000);
-    //   clearInterval(timerId)
     
-
-    // const Table = ({rows}) => {
-    // return <>
-    //     <TableContainer component={Paper}>
-    //         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-    //         <TableHead>
-    //         <TableRow>
-    //             <TableCell>Material</TableCell>
-    //             <TableCell align="right">Plant</TableCell>
-    //             <TableCell align="right">Plant MRP Block</TableCell>
-    //             <TableCell align="right">SPT</TableCell>
-    //             <TableCell align="right">Source</TableCell>
-    //             <TableCell align="right">Vendor Name</TableCell>
-    //             <TableCell align="right">Vendor Material</TableCell>
-    //             <TableCell align="right">Packing Code</TableCell>
-    //             <TableCell align="right">MPG</TableCell>
-    //       </TableRow>
-    //     </TableHead>
-    //     <TableBody>
-    //       {rows && rows.map((row) => (
-    //         <TableRow
-    //           key={row.material}
-    //           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-    //         >
-    //           <TableCell component="th" scope="row">
-    //             {row.plant}
-    //           </TableCell>
-    //           <TableCell align="right">{row.plant_mrp_block}</TableCell>
-    //           <TableCell align="right">{row.spt}</TableCell>
-    //           <TableCell align="right">{row.source}</TableCell>
-    //           <TableCell align="right">{row.vendor_name}</TableCell>
-    //           <TableCell align="right">{row.vendor_material}</TableCell>
-    //           <TableCell align="right">{row.packing_code}</TableCell>
-    //           <TableCell align="right">{row.mpg}</TableCell>
-    //         </TableRow>
-    //       ))}
-    //     </TableBody>
-    //   </Table>
-    // </TableContainer>
-    // </>
-
-   
-    // }
-    
-    return (
-        <div className="mx-auto">
-        	<div
-		class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-10/12 md:w-4/12 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-auto my-4'>
+    const colums = [
+        "Material",
+        "Plant",
+        "Plant MRP Block",
+        "SPT",
+        "Source",
+        "Vendor Name",
+        "Vendor Material",
+        "Packing Code",
+        "MPG"
+    ]
+    const DataTable = ({rows}) => {
+    return <>
+        <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+            <TableRow>
+                {colums.map((col) => <TableCell key={col}>{col}</TableCell>)}    
+            </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows && rows.map((row) => (
+            <TableRow key={row.material}>
+            <TableCell>{row.material}</TableCell>
+              <TableCell>{row.plant}</TableCell>
+              <TableCell>{row.plant_mrp_block}</TableCell>
+              <TableCell>{row.spt}</TableCell>
+              <TableCell>{row.source}</TableCell>
+              <TableCell>{row.vendor_name}</TableCell>
+              <TableCell>{row.vendor_material}</TableCell>
+              <TableCell>{row.packing_code}</TableCell>
+              <TableCell>{row.mpg}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    </>
+    }
+    const Card = ({title,count}) => {
+        return <div class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-10/12 md:w-4/12 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-auto my-4'>
 		<div class="flex justify-between w-full">
 			<div>
 				<div class="p-2">
@@ -92,50 +84,23 @@ const Dashboard = () => {
 		</div>
 		<div>
 			<div class="font-bold text-5xl text-center">
-				{paCodeMissingData ? paCodeMissingData.total_records_with_pa_missing : 0}
+				{count}
 			</div>
 			<div class="font-bold text-sm">
-				Missing Packing Code
+				{title}
 			</div>
 		</div>
        
 	</div>
+    }
+    return (
+    <div className="mx-auto">
+    <Card title={"Missing Packing Code"} count={paCodeMissingData ? paCodeMissingData.total_records_with_pa_missing : 0}/>
     <div className="mx-10 mt-20 table-override">
     <p className="text-right text-sm mb-1">Data Updated at : {updatedAt}</p>
-    <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-            <TableRow>
-                <TableCell>Material</TableCell>
-                <TableCell align="right">Plant</TableCell>
-                <TableCell align="right">Plant MRP Block</TableCell>
-                <TableCell align="right">SPT</TableCell>
-                <TableCell align="right">Source</TableCell>
-                <TableCell align="right">Vendor Name</TableCell>
-                <TableCell align="right">Vendor Material</TableCell>
-                <TableCell align="right">Packing Code</TableCell>
-                <TableCell align="right">MPG</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paCodeMissingData && paCodeMissingData.data.map((row) => (
-            <TableRow key={row.material}>
-            <TableCell component="th" scope="row">{row.material}</TableCell>
-              <TableCell component="th" scope="row">{row.plant}</TableCell>
-              <TableCell align="right">{row.plant_mrp_block}</TableCell>
-              <TableCell align="right">{row.spt}</TableCell>
-              <TableCell align="right">{row.source}</TableCell>
-              <TableCell align="right">{row.vendor_name}</TableCell>
-              <TableCell align="right">{row.vendor_material}</TableCell>
-              <TableCell align="right">{row.packing_code}</TableCell>
-              <TableCell align="right">{row.mpg}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <DataTable rows={paCodeMissingData ? paCodeMissingData.data : []} />
     </div>
-      </div>
+    </div>
     );
 }
 export default Dashboard;
