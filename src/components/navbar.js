@@ -11,7 +11,7 @@ const Navbar = () => {
                 <img class="h-8 w-8" src={Logo} alt="monitor"/>
                 
               </div>
-              <h1 className="mx-2 font-bold text-lg text-white">Monitor</h1>
+              <h1 className="mx-2 font-bold text-lg text-white"><span className="text-teal-600 text-xl">M</span>onitor</h1>
               <div class="hidden md:block">
                 {/* <div class="ml-10 flex items-baseline space-x-4">
                   
