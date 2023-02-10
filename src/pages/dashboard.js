@@ -14,7 +14,7 @@ const Dashboard = () => {
     const [updatedAt,setUpdatedAt] = useState("")
     
     const getDataFromSheet = () => {
-        axios.get("https://script.google.com/macros/s/AKfycbwMsg7RJ1wbdm0FM-Pg6TeyZSQUzb5enYGljLg7kOWUWSNZghFIznlqKIeNsc17B8P2/exec")
+        axios.get("https://script.google.com/macros/s/AKfycbzvM8IA_E6pF3ttUCJkymDgiU78uG9_ZG4gp0LY8c2fHQ3AzPBP0K9rnKYHP_a3APDH/exec")
         .then((response) => {
             if(response.status == 200){
             setPaCodeMissingData(response.data)
