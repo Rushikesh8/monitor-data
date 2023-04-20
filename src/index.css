@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* @import './Assets/mixins'; */
 
 body {
   margin: 0;

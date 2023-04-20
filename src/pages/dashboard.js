@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from "react";
-import axios from "axios";
+import axiosInstance from "../axios";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,13 +14,20 @@ const Dashboard = () => {
     const [updatedAt,setUpdatedAt] = useState("")
     
     const getDataFromSheet = () => {
-        axios.get("https://script.google.com/macros/s/AKfycbzvM8IA_E6pF3ttUCJkymDgiU78uG9_ZG4gp0LY8c2fHQ3AzPBP0K9rnKYHP_a3APDH/exec")
-        .then((response) => {
-            if(response.status == 200){
-            setPaCodeMissingData(response.data)
-            setUpdatedAt(new Date().toLocaleString())
-            }
-        })
+        // axios.get("https://script.google.com/macros/s/AKfycbzvM8IA_E6pF3ttUCJkymDgiU78uG9_ZG4gp0LY8c2fHQ3AzPBP0K9rnKYHP_a3APDH/exec")
+        // .then((response) => {
+        //     if(response.status == 200){
+        //     setPaCodeMissingData(response.data)
+        //     setUpdatedAt(new Date().toLocaleString())
+        //     }
+        // })
+        // axiosInstance.get("/inventory/get-dashboard-stats")
+        // .then((response) => {
+       
+        //   console.log(response)
+        //   setPaCodeMissingData(response.data)
+          
+        // })
     }
     useEffect(() => {
         getDataFromSheet()
@@ -94,6 +101,8 @@ const Dashboard = () => {
 	</div>
     }
     return (
+    <>
+    
     <div className="mx-auto">
     <Card title={"Missing Packing Code"} count={paCodeMissingData ? paCodeMissingData.total_records_with_pa_missing : 0}/>
     <div className="mx-10 mt-20 table-override">
@@ -101,6 +110,7 @@ const Dashboard = () => {
     <DataTable rows={paCodeMissingData ? paCodeMissingData.data : []} />
     </div>
     </div>
+    </>
     );
 }
 export default Dashboard;
