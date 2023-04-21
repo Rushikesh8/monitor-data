@@ -1,106 +1,148 @@
 import React,{useEffect,useState} from "react";
-import axios from "axios";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import axiosInstance from "../axios";
+import { useNavigate } from 'react-router-dom';
 
 
 const Dashboard = () => {
-    const [paCodeMissingData,setPaCodeMissingData] = useState()
-    const [updatedAt,setUpdatedAt] = useState("")
-    
-    const getDataFromSheet = () => {
-        axios.get("https://script.google.com/macros/s/AKfycbzvM8IA_E6pF3ttUCJkymDgiU78uG9_ZG4gp0LY8c2fHQ3AzPBP0K9rnKYHP_a3APDH/exec")
-        .then((response) => {
-            if(response.status == 200){
-            setPaCodeMissingData(response.data)
-            setUpdatedAt(new Date().toLocaleString())
-            }
-        })
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(!token){
+      navigate('/login')
     }
-    useEffect(() => {
-        getDataFromSheet()
-    },[])
-    const timerId = setInterval(() => {
-        getDataFromSheet()
-      }, 300000);
-    
-    const colums = [
-        "Material",
-        "Plant",
-        "Plant MRP Block",
-        "SPT",
-        "Source",
-        "Vendor Name",
-        "Vendor Material",
-        "Packing Code",
-        "MPG"
-    ]
-    const DataTable = ({rows}) => {
-    return <>
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-            <TableRow>
-                {colums.map((col) => <TableCell key={col}>{col}</TableCell>)}    
-            </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows && rows.map((row) => (
-            <TableRow key={row.material}>
-            <TableCell>{row.material}</TableCell>
-              <TableCell>{row.plant}</TableCell>
-              <TableCell>{row.plant_mrp_block}</TableCell>
-              <TableCell>{row.spt}</TableCell>
-              <TableCell>{row.source}</TableCell>
-              <TableCell>{row.vendor_name}</TableCell>
-              <TableCell>{row.vendor_material}</TableCell>
-              <TableCell>{row.packing_code}</TableCell>
-              <TableCell>{row.mpg}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </>
-    }
-    const Card = ({title,count}) => {
-        return <div class='flex flex-wrap flex-row sm:flex-col justify-center items-center w-10/12 md:w-4/12 p-5 bg-white rounded-md shadow-xl border-l-4 border-teal-600 mx-auto my-4'>
-		<div class="flex justify-between w-full">
-			<div>
-				<div class="p-2">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="None" viewBox="0 0 24 24" stroke-width="1.5"
-						stroke="#0d9488" class="w-6 h-6">
-						<path stroke-linecap="round" stroke-linejoin="round"
-							d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-					</svg>
-				</div>
-			</div>
-			
-		</div>
-		<div>
-			<div class="font-bold text-5xl text-center">
-				{count}
-			</div>
-			<div class="font-bold text-sm">
-				{title}
-			</div>
-		</div>
-       
-	</div>
-    }
-    return (
-    <div className="mx-auto">
-    <Card title={"Missing Packing Code"} count={paCodeMissingData ? paCodeMissingData.total_records_with_pa_missing : 0}/>
-    <div className="mx-10 mt-20 table-override">
-    <p className="text-right text-sm mb-1">Data Updated at : {updatedAt}</p>
-    <DataTable rows={paCodeMissingData ? paCodeMissingData.data : []} />
+  },[navigate])
+  const [formData,setFormData] = useState({
+      "height":0,
+      "weight":0,
+      "age":0
+  })
+  const [waistMeasurementData,setWaistMeasurementData] = useState({
+    "waist_measurement":0,
+    "is_waist_measurement_available":false
+  })
+  const [isUserFormVisible,setIsUserFormVisible] = useState(true)
+  const handleSubmit = (event) => {
+      event.preventDefault();
+      let getWaistMeasurement = "api/measurement/waist-measurement/"
+      // Object.keys(formData).map((key,idx) => getWaistMeasurement += `${idx == 0 ? '?' : '&'}` + `${key}=${getWaistMeasurement[key]}`)
+      axiosInstance.post(getWaistMeasurement,{...formData})
+      .then((res) => {
+        if(res.data.success){
+          setWaistMeasurementData({
+            "is_waist_measurement_available":res.data.data.is_waist_measurement_available,
+            "waist_measurement":res.data.data.waist_measurement
+          })
+          setIsUserFormVisible(false)
+        }
+      })
+      .catch((err) => console.log(err))
+      
+    };
+    const handleWaistMeasurement = (event) => {
+      event.preventDefault();
+      let getWaistMeasurement = "api/measurement/waist-measurement/"
+      // Object.keys(formData).map((key,idx) => getWaistMeasurement += `${idx == 0 ? '?' : '&'}` + `${key}=${getWaistMeasurement[key]}`)
+      axiosInstance.patch(getWaistMeasurement,{...formData,"waist_measurement":waistMeasurementData["waist_measurement"]})
+      .then((res) => {
+        if(res.data.success){
+          setIsUserFormVisible(true)
+          setFormData({
+            "height":0,
+            "weight":0,
+            "age":0
+          })
+        }
+      })
+      .catch((err) => console.log(err))
+      
+    };
+  const onInputChange = (e) => {
+    let name = e.target.name
+    let value = e.target.value
+    setFormData({...formData,[name]:value})
+  }
+  const handleBackClick = () => {
+    setIsUserFormVisible(true)
+    setFormData({
+      "height":0,
+      "weight":0,
+      "age":0
+    })
+
+  }
+  return (
+    <>
+    {isUserFormVisible ? <div class="w-full max-w-xs mt-8 md:mt-24 mx-auto">
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="height">
+      Height (cm)
+      </label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+      id="height" 
+      name="height"
+      type="number" 
+      placeholder="Height"
+      onChange={(e) => onInputChange(e)}
+      value={formData.height}/>
     </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="weight">
+      Weight (kg)
+      </label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+      id="weight" 
+      name="weight" 
+      type="number" 
+      placeholder="Weight"
+      onChange={(e) => onInputChange(e)}
+      value={formData.weight}/>
     </div>
-    );
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="age">
+      Age (years)
+      </label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+      id="age" 
+      name="age" 
+      type="number" 
+      placeholder="Age"
+      onChange={(e) => onInputChange(e)}
+      value={formData.age}/>
+    </div>
+    <div class="flex items-center justify-center">
+      <button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+        Next
+      </button>
+    </div>
+  </form>
+  </div> :
+  <div class="w-full max-w-xs mt-8 mx-auto">
+        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleWaistMeasurement}>
+        <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="waist_measurement">
+      Waist Measurement (cm)
+      </label>
+      <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+      id="waist_measurement" 
+      name="waist_measurement"
+      type="number" 
+      placeholder="waist_measurement"
+      disabled={waistMeasurementData.is_waist_measurement_available}
+      onChange={(e) => setWaistMeasurementData({...waistMeasurementData,"waist_measurement":e.target.value})}
+      value={waistMeasurementData.waist_measurement}/>
+    </div>
+    <div class="flex items-center justify-center">
+      {!waistMeasurementData.is_waist_measurement_available ? <button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+        Submit
+      </button>:<button class="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={handleBackClick}>
+        Back
+      </button>}
+    </div>
+        </form>
+  </div>}
+  </>
+   
+  );
 }
 export default Dashboard;
