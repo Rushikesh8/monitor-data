@@ -1,5 +1,5 @@
 import axios from 'axios';
-let baseURL = "http://127.0.0.1:7000/"
+let baseURL = "https://measurements.onrender.com/"
 const axiosInstance = axios.create({
 	baseURL: baseURL,
 	timeout: 5000,
