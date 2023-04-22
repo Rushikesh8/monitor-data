@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import axiosInstance from "../axios";
 import { useNavigate } from 'react-router-dom';
+import toast,{ Toaster } from 'react-hot-toast';
 
 
 const Dashboard = () => {
@@ -41,10 +42,10 @@ const Dashboard = () => {
     const handleWaistMeasurement = (event) => {
       event.preventDefault();
       let getWaistMeasurement = "api/measurement/waist-measurement/"
-      // Object.keys(formData).map((key,idx) => getWaistMeasurement += `${idx == 0 ? '?' : '&'}` + `${key}=${getWaistMeasurement[key]}`)
       axiosInstance.patch(getWaistMeasurement,{...formData,"waist_measurement":waistMeasurementData["waist_measurement"]})
       .then((res) => {
         if(res.data.success){
+          toast.success("Waist Measurement Registered Successfully !")
           setIsUserFormVisible(true)
           setFormData({
             "height":0,
@@ -73,7 +74,7 @@ const Dashboard = () => {
   return (
     <>
     {isUserFormVisible ? <div class="w-full max-w-xs mt-8 md:mt-24 mx-auto">
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+    <form class="bg-white border border-gray-200 rounded-lg shadow px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
     <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="height">
       Height (cm)
@@ -118,7 +119,7 @@ const Dashboard = () => {
   </form>
   </div> :
   <div class="w-full max-w-xs mt-8 mx-auto">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleWaistMeasurement}>
+        <form class="bg-white border border-gray-200 rounded-lg shadow px-8 pt-6 pb-8 mb-4" onSubmit={handleWaistMeasurement}>
         <div class="mb-4">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="waist_measurement">
       Waist Measurement (cm)
@@ -127,7 +128,7 @@ const Dashboard = () => {
       id="waist_measurement" 
       name="waist_measurement"
       type="number" 
-      placeholder="waist_measurement"
+      placeholder="Waist Measurement"
       disabled={waistMeasurementData.is_waist_measurement_available}
       onChange={(e) => setWaistMeasurementData({...waistMeasurementData,"waist_measurement":e.target.value})}
       value={waistMeasurementData.waist_measurement}/>
@@ -141,6 +142,7 @@ const Dashboard = () => {
     </div>
         </form>
   </div>}
+  <Toaster/>
   </>
    
   );

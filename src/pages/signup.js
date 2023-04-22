@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import axiosInstance from "../axios";
 import { useNavigate } from 'react-router-dom';
+import toast,{ Toaster } from 'react-hot-toast';
 
 
 
@@ -21,7 +22,18 @@ const Signup = () => {
             navigate('/')
           }
         })
-        .catch((err) => console.log(err))  
+        .catch((err) => {
+            if (err.response){
+                if (Object.keys(err.response.data.errors)){
+                    Object.values(err.response.data.errors).map((msg) => toast.error(msg))
+                    return
+                }
+                if(err.response.data.message){
+                    toast.error(err.response.data.message)
+                    return
+                }
+            }
+        })  
       };
     const onInputChange = (e) => {
         let name = e.target.name
@@ -32,7 +44,7 @@ const Signup = () => {
     return (
 
         <div class="w-full max-w-xs mt-8 md:mt-24 mx-auto">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+        <form class="bg-white border border-gray-200 rounded-lg shadow px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
             <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
             Username
@@ -57,7 +69,7 @@ const Signup = () => {
       onChange={(e) => onInputChange(e)}
       value={signupFormData.password}/>
     </div>
-    <div class="mb-4">
+    <div class="mb-8">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
       Email
       </label>
@@ -74,7 +86,9 @@ const Signup = () => {
         Sign Up
       </button>
     </div>
+    <p className="text-gray-700 text-xs font-bold mt-8 text-center">Already have an account? <span className="text-teal-400 cursor-pointer" onClick={() => navigate('/login')}>Login</span></p>
   </form>
+  <Toaster/>
   </div>
     );
 }

@@ -1,6 +1,7 @@
-import React,{useEffect,useState} from "react";
+import React,{useState} from "react";
 import axiosInstance from "../axios";
 import { useNavigate } from 'react-router-dom';
+import toast,{ Toaster } from 'react-hot-toast';
 
 
 
@@ -15,12 +16,18 @@ const Login = () => {
         let loginUrl = "api/accounts/get-token/"
         axiosInstance.post(loginUrl,{...loginFormData})
         .then((res) => {
+          console.log(res)
           if(res.data.success){
             localStorage.setItem("token", res.data.data.auth_token);
             navigate('/')
           }
+          
         })
-        .catch((err) => console.log(err))  
+        .catch((err) => {
+            if (err.response){
+                toast.error(err.response.data.message)
+            }
+        })
       };
     const onInputChange = (e) => {
         let name = e.target.name
@@ -31,7 +38,7 @@ const Login = () => {
     return (
 
         <div class="w-full max-w-xs mt-8 md:mt-24 mx-auto">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-4 mb-4" onSubmit={handleSubmit}>
+        <form class="bg-white border border-gray-200 rounded-lg shadow px-8 pt-6 pb-4 mb-4" onSubmit={handleSubmit}>
             <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
             Username
@@ -64,6 +71,7 @@ const Login = () => {
     </div>
     <p className="text-gray-700 text-xs font-bold mt-8 text-center">Don't have an account? <span className="text-teal-400 cursor-pointer" onClick={() => navigate('/signup')}>Register here</span></p>
   </form>
+  <Toaster/>
   </div>
     );
 }

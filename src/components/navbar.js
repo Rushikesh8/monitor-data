@@ -8,6 +8,7 @@ const Navbar = () => {
     localStorage.setItem("token", "");
     navigate('/login')
   }
+  const isAuthenticated = localStorage.getItem("token")
     return (
         <nav class="bg-gray-800">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -21,7 +22,7 @@ const Navbar = () => {
               
             </div>
             <div class="">
-              <p className="font-bold text-md text-white hover:text-teal-400 cursor-pointer" onClick={handleLogoutClick}>Logout</p>
+              {isAuthenticated && <p className="font-bold text-md text-white hover:text-teal-400 cursor-pointer" onClick={handleLogoutClick}>Logout</p>}
             </div>
          
        
